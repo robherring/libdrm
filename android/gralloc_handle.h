@@ -129,4 +129,50 @@ static inline uint32_t gralloc_handle_get_fourcc_format(buffer_handle_t _handle)
 	return handle->format;
 }
 
+static inline int gralloc_handle_get_fd(buffer_handle_t _handle, int plane)
+{
+	struct gralloc_handle_t *handle = gralloc_handle(_handle);
+
+	if (plane != 0)
+		return -1;
+
+	return handle->prime_fd;
+}
+
+static inline int gralloc_handle_set_fd(buffer_handle_t _handle, int plane, int fd)
+{
+	struct gralloc_handle_t *handle = gralloc_handle(_handle);
+
+	if (plane != 0)
+		return -1;
+
+	handle->prime_fd = fd;
+	return 0;
+}
+
+static inline void gralloc_handle_get_buffer_dim(buffer_handle_t _handle, uint32_t *width, uint32_t *height)
+{
+	struct gralloc_handle_t *handle = gralloc_handle(_handle);
+
+	*width = handle->width;
+	*height = handle->height;
+}
+
+static inline uint32_t gralloc_handle_get_usage(buffer_handle_t _handle)
+{
+	struct gralloc_handle_t *handle = gralloc_handle(_handle);
+
+	return handle->usage;
+}
+
+static inline uint32_t gralloc_handle_get_stride(buffer_handle_t _handle, int plane)
+{
+	struct gralloc_handle_t *handle = gralloc_handle(_handle);
+
+	if (plane != 0)
+		return 0;
+
+	return handle->stride;
+}
+
 #endif
