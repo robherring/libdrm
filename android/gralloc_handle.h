@@ -29,6 +29,8 @@
 #include <cutils/native_handle.h>
 #include <stdint.h>
 
+#include <drm/drm_fourcc.h>
+
 /* support users of drm_gralloc/gbm_gralloc */
 #define gralloc_gbm_handle_t gralloc_handle_t
 #define gralloc_drm_handle_t gralloc_handle_t
@@ -101,11 +103,30 @@ static inline native_handle_t *gralloc_handle_create(int32_t width,
 	handle->version = GRALLOC_HANDLE_VERSION;
 	handle->width = width;
 	handle->height = height;
-	handle->format = hal_format;
 	handle->usage = usage;
 	handle->prime_fd = -1;
 
-	return handle;
+	if (hal_format == HAL_PIXEL_FORMAT_BGRA_8888)
+		handle->format = DRM_FORMAT_ARGB8888;
+	else if (hal_format == HAL_PIXEL_FORMAT_RGB_565)
+		handle->format = DRM_FORMAT_RGB565;
+	else if (hal_format == HAL_PIXEL_FORMAT_RGB_888)
+		handle->format = DRM_FORMAT_RGB888;
+	else if (hal_format == HAL_PIXEL_FORMAT_RGBA_8888)
+		handle->format = DRM_FORMAT_ABGR8888;
+	else if (hal_format == HAL_PIXEL_FORMAT_RGBX_8888)
+		handle->format = DRM_FORMAT_XBGR8888;
+	else if (hal_format == HAL_PIXEL_FORMAT_YV12)
+		handle->format = DRM_FORMAT_YVU420;
+
+	return nhandle;
+}
+
+static inline uint32_t gralloc_handle_get_fourcc_format(buffer_handle_t _handle)
+{
+	struct gralloc_handle_t *handle = gralloc_handle(_handle);
+
+	return handle->format;
 }
 
 #endif
