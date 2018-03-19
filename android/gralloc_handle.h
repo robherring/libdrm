@@ -33,7 +33,7 @@
 
 /* support users of drm_gralloc/gbm_gralloc */
 #define gralloc_gbm_handle_t gralloc_handle_t
-#define gralloc_drm_handle_t gralloc_handle_t
+#define gralloc_drm_handle gralloc_handle
 
 struct gralloc_handle_t {
 	native_handle_t base;
